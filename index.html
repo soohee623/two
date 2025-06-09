@@ -719,7 +719,7 @@ Released under the MIT license: http://jsbin.mit-license.org
 }
 
     }
-  }
+  
 
   function backToThumbnails(season) {
     currentRecipe = '';
@@ -785,6 +785,10 @@ Released under the MIT license: http://jsbin.mit-license.org
   detail: `rating: ${rating}, comment: ${commentText}`
 });
 
+    sendDataToSheet({
+  type: 'comment',
+  detail: `rating: ${rating}, comment: ${commentText}`
+});
 
     // 폼 초기화
     form.reset();
