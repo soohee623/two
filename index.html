@@ -643,6 +643,13 @@ Released under the MIT license: http://jsbin.mit-license.org
 </section>
 
 <script>
+
+    window.onload = () => {
+    loadComments();
+    showSeason('spring');
+    showRecipe('matcha'); // 이 라인을 추가하면 말차 라떼 디테일 자동 표시됨
+  };
+  
   // --- ⬇️ 1. 데이터 로깅을 위한 설정 ⬇️ ---
     // ❗️❗️ 위 1단계에서 배포 후 복사한 본인의 웹 앱 URL을 여기에 붙여넣으세요.
     const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzBEFXoCmwB-TqUpZQ0Ar1Ezj8AsKgeClKKGVByhXcvbeQX1D2YFJbzJzFqGl5TTCWZKA/exec';
