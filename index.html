@@ -652,7 +652,7 @@ Released under the MIT license: http://jsbin.mit-license.org
      * @param {object} eventData - { type: string, detail: string } 형태의 이벤트 데이터
      */
     function sendDataToSheet(eventData) {
-    //   if (!APPS_SCRIPT_URL || APPS_SCRIPT_URL === 'https://script.google.com/macros/s/AKfycbzBEFXoCmwB-TqUpZQ0Ar1Ezj8AsKgeClKKGVByhXcvbeQX1D2YFJbzJzFqGl5TTCWZKA/exec') {
+    //   if (!APPS_SCRIPT_URL || APPS_SCRIPT_URL === 'ohttps://script.google.com/macros/s/AKfycbzBEFXoCmwB-TqUpZQ0Ar1Ezj8AsKgeClKKGVByhXcvbeQX1D2YFJbzJzFqGl5TTCWZKA/exec') {
    //    console.warn("Google Apps Script URL이 설정되지 않았습니다. 데이터가 전송되지 않습니다.");
    // return;
   //    }
@@ -710,6 +710,14 @@ Released under the MIT license: http://jsbin.mit-license.org
     const recipe = document.getElementById(id);
     if (recipe) {
       recipe.style.display = 'flex';
+
+  // 🔽 여기에 추가
+  sendDataToSheet({
+    type: 'recipe_click',
+    detail: id
+  });
+}
+
     }
   }
 
@@ -768,7 +776,15 @@ Released under the MIT license: http://jsbin.mit-license.org
     // 댓글을 { rating, text } 객체 형태로 저장
     const comments = JSON.parse(localStorage.getItem('comments') || '[]');
     comments.push({ rating: parseInt(rating), text: commentText });
-    localStorage.setItem('comments', JSON.stringify(comments));
+    // 기존 코드
+   localStorage.setItem('comments', JSON.stringify(comments));
+
+// 🔽 여기에 추가
+  sendDataToSheet({
+  type: 'comment',
+  detail: `rating: ${rating}, comment: ${commentText}`
+});
+
 
     // 폼 초기화
     form.reset();
