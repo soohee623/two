@@ -739,7 +739,6 @@ Released under the MIT license: http://jsbin.mit-license.org
       return;
     }
 
-
     // 댓글을 { rating, text } 객체 형태로 저장
     const comments = JSON.parse(localStorage.getItem('comments') || '[]');
     comments.push({ rating: parseInt(rating), text: commentText });
