@@ -728,11 +728,23 @@ Released under the MIT license: http://jsbin.mit-license.org
     }
   
 
-  function backToThumbnails(season) {
-    currentRecipe = '';
-    if (season) {
-      showSeason(season);
-    }
+function backToThumbnails(season) {
+  currentRecipe = '';
+
+  // 🔽 해당 썸네일 영역 다시 보이게
+  const seasonThumbnails = document.getElementById(season);
+  if (seasonThumbnails) {
+    seasonThumbnails.style.display = 'flex';
+  }
+
+  // 🔽 레시피 상세들 숨기기
+  document.querySelectorAll('.recipe-detail').forEach(el => {
+    el.style.display = 'none';
+  });
+
+  // 버튼 상태도 초기화
+  showSeason(season);
+
   }
 
   // --- 별점 & 댓글 기능 Script 시작 ---
