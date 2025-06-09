@@ -1,763 +1,206 @@
 <!DOCTYPE html>
-<!--
-Created using JS Bin
-http://jsbin.com
-
-Copyright (c) 2025 by soohee623 (http://jsbin.com/moradiw/1/edit)
-
-Released under the MIT license: http://jsbin.mit-license.org
--->
-<meta name="robots" content="noindex">
 <html lang="ko">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>초간단 비건 디저트 가이드</title>
-<style>
-  /* Pretendard 폰트 추가 */
-  @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css');
-
-  body {
-    font-family: "Pretendard", sans-serif;
-    background-color: #f6f4f1; /* 이미지 배경색 */
-    color: #5c5c5c; /* 기본 텍스트 색상 */
-    margin: 0;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    min-height: 100vh;
-    box-sizing: border-box;
-  }
-  header {
-    margin-top: 2rem;
-    text-align: center;
-  }
-  h1 {
-    background-color: #ca9f80; /* 타이틀 배경색 */
-    color: white;
-    padding: 0.8rem 1.5rem;
-    border-radius: 9999px;
-    font-size: 1.3rem;
-    font-weight: 600;
-    display: inline-block;
-  }
-  .description {
-    background-color: #dde5d5; /* 설명 박스 배경색 */
-    padding: 1.5rem;
-    border-radius: 1rem;
-    margin: 1rem;
-    max-width: 400px;
-    width: 90vw;
-    text-align: center;
-    line-height: 1.6;
-    font-size: 0.9rem;
-    box-sizing: border-box;
-  }
-  .season-buttons {
-    display: flex;
-    gap: 0.5rem;
-    margin: 2rem;
-    justify-content: center;
-  }
-  .season-button {
-    border: none;
-    padding: 0.5rem 1rem;
-    border-radius: 9999px;
-    font-weight: bold;
-    cursor: pointer;
-    color: #fff;
-    transition: all 0.2s ease-in-out;
-  }
-  /* 계절별 버튼 색상 */
-  .season-button:nth-child(1) { background-color: #e8c9c9; }
-  .season-button:nth-child(2) { background-color: #aaca80; }
-  .season-button:nth-child(3) { background-color: #e8d7c9; }
-  .season-button:nth-child(4) { background-color: #c9d7e8; }
-
-  .season-button.active {
-    transform: translateY(-3px);
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-  }
-  .recipe-thumbnails {
-    display: none;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: flex-start;
-    gap: 1rem;
-    margin-bottom: 2rem;
-    max-width: 400px;
-    width: 90vw;
-    box-sizing: border-box;
-    border: 2px solid #dde5d5; /* 썸네일 컨테이너 테두리 */
-    border-radius: 1.5rem;
-    padding: 1rem;
-  }
-  .recipe-detail {
-    display: none;
-    flex-direction: column;
-    align-items: center;
-    gap: 1rem;
-    margin-bottom: 2rem;
-    max-width: 400px;
-    width: 90vw;
-    box-sizing: border-box;
-    text-align: left;
-    background-color: transparent; /* 상세 배경 투명하게 */
-    padding: 0;
-    box-shadow: none;
-  }
-  .recipe-detail h2 {
-    background-color: #ca9f80;
-    color: white;
-    padding: 0.6rem 1.2rem;
-    border-radius: 9999px;
-    font-size: 1.1rem;
-    font-weight: 600;
-    display: inline-block;
-  }
-  /* 레시피 상세 내부 박스 스타일 */
-  .detail-box {
-    width: 100%;
-    padding: 1rem 1.5rem;
-    border-radius: 1.5rem;
-    box-sizing: border-box;
-  }
-  .detail-box strong {
-    font-size: 1rem;
-    margin-bottom: 0.5rem;
-    display: block;
-    color: #8a7a6d;
-  }
-  .detail-box ul, .detail-box ol {
-    padding-left: 20px;
-    line-height: 1.7;
-    font-size: 0.9rem;
-  }
-  .ingredients-box {
-    background-color: #fcf9f2; /* 재료 박스 배경 */
-  }
-  .instructions-box {
-    background-color: #dde5d5; /* 만드는 법 박스 배경 */
-  }
-
-  .thumbnail {
-    cursor: pointer;
-    text-align: center;
-    width: 150px;
-  }
-  .thumbnail img {
-    width: 100%;
-    border-radius: 1rem;
-    border: 2px solid #e0e0e0;
-  }
-  .thumbnail div {
-    font-size: 0.9rem;
-    font-weight: 600;
-    margin-top: 0.5rem;
-  }
-  .nav-buttons {
-    display: flex;
-    justify-content: center;
-    margin-top: 1rem;
-    gap: 1rem;
-  }
-  .nav-buttons button, .nav-buttons a {
-    padding: 0.8rem 1.5rem;
-    border-radius: 9999px;
-    border: none;
-    background-color: #ca9f80; /* 버튼 배경색 */
-    color: white;
-    font-weight: bold;
-    cursor: pointer;
-    text-decoration: none; /* a 태그 밑줄 제거 */
-    font-size: 14px; /* button 태그와 폰트 크기 맞춤 */
-    display: inline-flex;
-    align-items: center;
-  }
-
-  /* --- 별점 & 댓글 기능 CSS 시작 --- */
-  .comment-section {
-    width: 90vw;
-    max-width: 400px;
-    margin-bottom: 2rem;
-    text-align: center;
-  }
-  .comment-section h3 {
-    font-size: 1.2rem;
-    font-weight: 600;
-  }
-  .leaf-icons {
-    font-size: 1.5rem;
-    color: #aaca80;
-    margin-bottom: 1rem;
-  }
-  #commentForm {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1rem;
-  }
-  .rating {
-    display: flex;
-    flex-direction: row-reverse; /* 별이 오른쪽부터 채워지도록 */
-    justify-content: center;
-    gap: 5px;
-  }
-  .rating input { display: none; }
-  .rating label {
-    font-size: 2rem;
-    color: #ddd;
-    cursor: pointer;
-    transition: color 0.2s;
-  }
-  .rating input:checked ~ label,
-  .rating:not(:checked) > label:hover,
-  .rating:not(:checked) > label:hover ~ label {
-    color: #f5b301;
-  }
-  #commentInput {
-    width: 100%;
-    min-height: 80px;
-    padding: 1rem;
-    border-radius: 1.5rem;
-    border: none;
-    background-color: #fcf9f2;
-    resize: vertical;
-    font-family: inherit;
-    box-sizing: border-box;
-  }
-  #commentForm button {
-    padding: 0.8rem 1.5rem;
-    border-radius: 9999px;
-    border: none;
-    background-color: #ca9f80;
-    color: white;
-    font-weight: bold;
-    cursor: pointer;
-  }
-  .comments-list {
-    margin-top: 1.5rem;
-    max-height: 200px;
-    overflow-y: auto;
-    border: none;
-    padding: 0.5rem;
-    border-radius: 1.5rem;
-    background-color: #fff;
-    font-size: 0.9rem;
-    text-align: left;
-  }
-  .comment-item {
-    display: flex;
-    align-items: center;
-    margin: 0.5rem;
-    border-bottom: 1px solid #eee;
-    padding: 0.5rem;
-  }
-  .comment-rating {
-    color: #f5b301;
-    font-size: 1rem;
-    margin-right: 10px; /* 별점과 댓글 사이 간격 */
-    flex-shrink: 0;
-  }
-  .comment-text {
-    flex-grow: 1;
-    line-height: 1.5;
-  }
-  /* --- 별점 & 댓글 기능 CSS 끝 --- */
-
-  /* 반응형 유지 */
-  @media (min-width: 400px) {
-    .recipe-thumbnails, .recipe-detail, .comment-section, .description {
-      width: 400px;
+  <meta charset="UTF-8">
+  <title>초간단 비건 디저트 가이드</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/reset-css@5.0.2/reset.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Noto Sans KR', sans-serif;
+      margin: 2rem;
+      background-color: #f9f9f9;
+      color: #333;
     }
-  }
-</style>
+    h1 {
+      font-size: 1.8rem;
+      margin-bottom: 1rem;
+    }
+    .season-buttons {
+      margin-bottom: 1rem;
+    }
+    .season-button {
+      margin-right: 0.5rem;
+      padding: 0.3rem 0.8rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      background-color: #fff;
+      cursor: pointer;
+    }
+    .season-button.active {
+      background-color: #dff5e1;
+      color: #2c7a3f;
+      font-weight: bold;
+    }
+    .thumbnail {
+      margin-top: 1rem;
+      cursor: pointer;
+      font-weight: bold;
+      border: 1px solid #ccc;
+      padding: 0.5rem;
+      background-color: #fff;
+      width: fit-content;
+    }
+    .recipe-detail {
+      margin-top: 1rem;
+      padding: 1rem;
+      border: 1px solid #ccc;
+      background-color: #fff;
+    }
+    form {
+      margin-top: 2rem;
+      padding: 1rem;
+      border: 1px solid #ccc;
+      background-color: #fff;
+    }
+    textarea {
+      width: 100%;
+      height: 4rem;
+      margin-top: 0.5rem;
+    }
+    .comment-rating {
+      color: #f5b301;
+      margin-right: 0.5rem;
+    }
+    .comment-item {
+      margin: 0.5rem 0;
+      display: flex;
+      align-items: center;
+    }
+    #commentsList {
+      margin-top: 1rem;
+    }
+  </style>
 </head>
 <body>
-<header>
   <h1>초간단 비건 디저트 가이드</h1>
-  <div class="description">
-  비건 디저트는 유제품과 달걀 없이도 가볍고 소화가 잘 되며, 알레르기나 식이 제한이 있는 사람들도 안심하고 즐길 수 있습니다. 또한 동물성 재료를 쓰지 않아 환경 부담을 줄이고, 지속가능한 식습관으로 이어집니다. 식물성 재료 중심이라 식이섬유와 영양이 풍부해 건강한 간식으로도 좋아요. 간단한 비건 베이킹으로 건강한 취미를 즐겨보세요!
-  </div>
+  <p>비건 디저트는 유제품과 달걀 없이도 가볍고 소화가 잘 되며, 알레르기나 식이 제한이 있는 사람들도 안심하고 즐길 수 있습니다...</p>
+
   <div class="season-buttons">
     <button class="season-button" onclick="showSeason('spring')">봄</button>
     <button class="season-button" onclick="showSeason('summer')">여름</button>
     <button class="season-button" onclick="showSeason('autumn')">가을</button>
     <button class="season-button" onclick="showSeason('winter')">겨울</button>
   </div>
-</header>
 
-<div id="spring" class="recipe-thumbnails">
-  <div class="thumbnail" onclick="showRecipe('matcha')">
-    <img src="spring1.png" alt="말차 라떼" />
-    <div>말차 라떼</div>
+  <div id="spring" class="recipe-thumbnails">
+    <div class="thumbnail" onclick="showRecipe('matcha')">말차 라떼</div>
   </div>
-  <div class="thumbnail" onclick="showRecipe('pudding')">
-    <img src="spring2.png" alt="딸기 코코넛 푸딩" />
-    <div>딸기 코코넛 푸딩</div>
-  </div>
-</div>
 
-<div id="matcha" class="recipe-detail card">
-  <img src="spring1.png" alt="말차 라떼" style="width:100%; border-radius:1.5rem;" />
-  <h2>말차 라떼 </h2>
-  <div class="detail-box ingredients-box">
-    <strong>재료</strong>
-    <ul>
-      <li>말차 가루 1작은술 </li>
-      <li>뜨거운 물 2큰술 </li>
-      <li>무가당 두유 또는 귀리우유 200ml </li>
-      <li>메이플 시럽 1큰술 (선택) </li>
-    </ul>
-    <strong>대체 재료</strong>
-    <ul>
-      <li>메이플 시럽 → 아가베 시럽, 코코넛 슈가 </li>
-      <li>두유 → 아몬드 밀크, 코코넛 밀크 </li>
-    </ul>
-    <strong>영양 정보(1잔)</strong>
-    <ul>
-      <li>약 80~120kcal, 단백질 3g, 지방 4g, 당류 6g </li>
-    </ul>
-  </div>
-  <div class="detail-box instructions-box">
-    <strong>만드는 법</strong>
-    <ol>
-      <li>말차 가루에 뜨거운 물을 넣는다. </li>
-      <li>거품기로 잘 푼다. </li>
-      <li>우유를 데우거나 차갑게 준비한다. </li>
-      <li>컵에 말차와 우유, 메이플 시럽을 넣고 섞는다. </li>
-    </ol>
-  </div>
-  <div class="nav-buttons">
+  <div id="matcha" class="recipe-detail">
+    <h2>말차 라떼</h2>
+    <p>비건 말차 라떼 만드는 법.</p>
     <button onclick="backToThumbnails('spring')">목록으로</button>
-    <a href="matcha.png" download>PNG 저장</a>
   </div>
-</div>
 
-<div id="pudding" class="recipe-detail card">
-  <img src="spring2.png" alt="딸기 코코넛 푸딩" style="width:100%; border-radius:1.5rem;" />
-  <h2>딸기 코코넛 푸딩 </h2>
-  <div class="detail-box ingredients-box">
-    <strong>재료</strong>
-    <ul>
-      <li>코코넛 밀크 200ml </li>
-      <li>치아씨드 3큰술 </li>
-      <li>바닐라 익스트랙 ½작은술 </li>
-      <li>잘게 썬 딸기 ½컵 </li>
-      <li>아가베 시럽 1큰술 </li>
-    </ul>
-    <strong>대체 재료</strong>
-    <ul>
-      <li>코코넛 밀크 → 귀리 우유, 아몬드 밀크 </li>
-      <li>딸기 → 블루베리, 복숭아 </li>
-    </ul>
-    <strong>영양 정보(1잔)</strong>
-    <ul>
-      <li>약 200kcal, 오메가-3 풍부, 식이섬유 6g </li>
-    </ul>
-  </div>
-  <div class="detail-box instructions-box">
-    <strong>만드는 법</strong>
-    <ol>
-      <li>코코넛 밀크에 치아씨드, 바닐라, 시럽을 섞는다. </li>
-      <li>냉장고에 2시간 이상 둔다. </li>
-      <li>딸기를 얹어 서빙한다. </li>
-    </ol>
-  </div>
-  <div class="nav-buttons">
-    <button onclick="backToThumbnails('spring')">목록으로</button>
-    <a href="pudding.png" download>PNG 저장</a>
-  </div>
-</div>
-
-<div id="summer" class="recipe-thumbnails">
-  <div class="thumbnail" onclick="showRecipe('mangoSmoothie')">
-    <img src="summer1.png" alt="망고 바나나 스무디" />
-    <div>망고 바나나 스무디</div>
-  </div>
-  <div class="thumbnail" onclick="showRecipe('veganPatbingsu')">
-    <img src="summer2.png" alt="비건 팥빙수" />
-    <div>비건 팥빙수</div>
-  </div>
-</div>
-
-<div id="mangoSmoothie" class="recipe-detail card">
-  <img src="summer1.png" alt="망고 바나나 스무디" style="width:100%; border-radius:1.5rem;" />
-  <h2>망고 바나나 스무디 </h2>
-  <div class="detail-box ingredients-box">
-    <strong>재료</strong>
-    <ul>
-      <li>냉동 망고 1컵 </li>
-      <li>바나나 1개 </li>
-      <li>코코넛 워터 또는 귀리우유 150ml </li>
-      <li>라임즙 약간 </li>
-    </ul>
-    <strong>대체 재료</strong>
-    <ul>
-      <li>망고 → 복숭아, 파인애플 </li>
-      <li>코코넛 워터 → 아몬드 밀크 </li>
-    </ul>
-    <strong>영양 정보(1잔)</strong>
-    <ul>
-      <li>약 180kcal, 비타민 C 풍부, 당류 15g </li>
-    </ul>
-  </div>
-  <div class="detail-box instructions-box">
-    <strong>만드는 법</strong>
-    <ol>
-      <li>재료를 전부 믹서기에 넣는다. </li>
-      <li>재료를 간 이후 컵에 따라 마신다. </li>
-    </ol>
-  </div>
-  <div class="nav-buttons">
-    <button onclick="backToThumbnails('summer')">목록으로</button>
-    <a href="mango.png" download>PNG 저장</a>
-  </div>
-</div>
-
-<div id="veganPatbingsu" class="recipe-detail card">
-  <img src="summer2.png" alt="비건 팥빙수" style="width:100%; border-radius:1.5rem;" />
-  <h2>비건 팥빙수 </h2>
-  <div class="detail-box ingredients-box">
-    <strong>재료</strong>
-    <ul>
-      <li>우유 대체 두유 300ml </li>
-      <li>팥 1컵 </li>
-      <li>설탕 2큰술 </li>
-      <li>얼음 적당량 </li>
-      <li>과일 토핑 (선택) </li>
-    </ul>
-    <strong>대체 재료</strong>
-    <ul>
-      <li>단팥 → 비건 아이스크림 </li>
-    </ul>
-    <strong>영양 정보(1잔)</strong>
-    <ul>
-      <li>약 250kcal, 단백질 5g, 식이섬유 4g </li>
-    </ul>
-  </div>
-  <div class="detail-box instructions-box">
-    <strong>만드는 법</strong>
-    <ol>
-      <li>두유를 끓여 팥과 설탕을 섞는다. </li>
-      <li>얼음을 그릇에 담고 두유 팥을 올린다. </li>
-      <li>과일 토핑을 얹는다. </li>
-    </ol>
-  </div>
-  <div class="nav-buttons">
-    <button onclick="backToThumbnails('summer')">목록으로</button>
-    <a href="bingsu.png" download>PNG 저장</a>
-  </div>
-</div>
-
-<div id="autumn" class="recipe-thumbnails">
-  <div class="thumbnail" onclick="showRecipe('appleCrisp')">
-    <img src="fall1.png" alt="단호박 파운드케이크" />
-    <div>단호박 파운드케이크</div>
-  </div>
-  <div class="thumbnail" onclick="showRecipe('pumpkinPie')">
-    <img src="fall2.png" alt="애플 시나몬 머핀" />
-    <div>애플 시나몬 머핀</div>
-  </div>
-</div>
-
-<div id="appleCrisp" class="recipe-detail card">
-  <img src="fall1.png" alt="단호박 파운드케이크" style="width:100%; border-radius:1.5rem;" />
-  <h2>단호박 파운드케이크 </h2>
-  <div class="detail-box ingredients-box">
-    <strong>재료</strong>
-    <ul>
-      <li>단호박 퓌레 1컵 </li>
-      <li>통밀가루 1컵 </li>
-      <li>베이킹파우더 1작은술 </li>
-      <li>아몬드 우유 2컵 </li>
-      <li>코코넛 오일 1½컵 </li>
-      <li>메이플 시럽 1½컵 </li>
-      <li>계피가루 약간 </li>
-    </ul>
-    <strong>대체 재료</strong>
-    <ul>
-      <li>단호박 → 고구마 </li>
-      <li>코코넛 오일 → 해바라기씨유 </li>
-    </ul>
-    <strong>영양 정보(1잔)</strong>
-    <ul>
-      <li>약 160kcal, 베타카로틴 풍부, 당류 10g </li>
-    </ul>
-  </div>
-  <div class="detail-box instructions-box">
-    <strong>만드는 법</strong>
-    <ol>
-      <li>재료를 전부 넣는다. </li>
-      <li>섞어서 반죽을 만든다. </li>
-      <li>모양을 잡고 180도 오븐에서 35~40분 굽는다. </li>
-    </ol>
-  </div>
-  <div class="nav-buttons">
-    <button onclick="backToThumbnails('autumn')">목록으로</button>
-    <a href="cake.png" download>PNG 저장</a>
-  </div>
-</div>
-
-<div id="pumpkinPie" class="recipe-detail card">
-  <img src="fall2.png" alt="애플 시나몬 머핀" style="width:100%; border-radius:1.5rem;" />
-  <h2>애플 시나몬 머핀 </h2>
-  <div class="detail-box ingredients-box">
-    <strong>재료</strong>
-    <ul>
-      <li>강판에 간 사과 1개 </li>
-      <li>통밀가루 1컵 </li>
-      <li>베이킹소다 ½작은술 </li>
-      <li>아몬드 우유 2컵 </li>
-      <li>올리브유 또는 식물성 오일 1½컵 </li>
-      <li>메이플 시럽 2큰술 </li>
-      <li>시나몬 가루 1작은술 </li>
-    </ul>
-    <strong>대체 재료</strong>
-    <ul>
-      <li>사과 → 배 </li>
-      <li>시럽 → 바나나 으깬 것 </li>
-    </ul>
-    <strong>영양 정보(1잔)</strong>
-    <ul>
-      <li>약 140kcal, 식이섬유 3g, 당류 9g </li>
-    </ul>
-  </div>
-  <div class="detail-box instructions-box">
-    <strong>만드는 법</strong>
-    <ol>
-      <li>오븐 180도 예열한다. </li>
-      <li>손질된 재료를 섞는다. </li>
-      <li>머핀 틀에 붓고 오븐에 180도에서 20분 굽는다. </li>
-    </ol>
-  </div>
-  <div class="nav-buttons">
-    <button onclick="backToThumbnails('autumn')">목록으로</button>
-    <a href="apple.png" download>PNG 저장</a>
-  </div>
-</div>
-
-<div id="winter" class="recipe-thumbnails">
-  <div class="thumbnail" onclick="showRecipe('hotChocolate')">
-    <img src="winter1.png" alt="비건 핫초코" />
-    <div>진한 비건 핫초코</div>
-  </div>
-  <div class="thumbnail" onclick="showRecipe('gingerbreadCookies')">
-    <img src="winter2.png" alt="오트밀 초코칩 쿠키" />
-    <div>오트밀 초코칩 쿠키</div>
-  </div>
-</div>
-
-<div id="hotChocolate" class="recipe-detail card">
-  <img src="winter1.png" alt="비건 핫초코" style="width:100%; border-radius:1.5rem;" />
-  <h2>진한 비건 핫초코 </h2>
-  <div class="detail-box ingredients-box">
-    <strong>재료</strong>
-    <ul>
-      <li>무가당 코코아 가루 2작은술 </li>
-      <li>식물성 우유 1컵 </li>
-      <li>메이플 시럽 또는 코코넛 슈가 1큰술 </li>
-      <li>바닐라 익스트랙 약간 </li>
-    </ul>
-    <strong>대체 재료</strong>
-    <ul>
-      <li>메이플 시럽 → 아가베 시럽 </li>
-      <li>코코아 가루 → 캐롭 파우더 </li>
-    </ul>
-    <strong>영양 정보(1잔)</strong>
-    <ul>
-      <li>약 150kcal, 항산화 성분 풍부, 당류 10g </li>
-    </ul>
-  </div>
-  <div class="detail-box instructions-box">
-    <strong>만드는 법</strong>
-    <ol>
-      <li>코코아 파우더와 설탕을 냄비에 넣고 약간의 식물성 우유를 넣어 섞는다. </li>
-      <li>나머지 우유를 넣고 데운다. </li>
-      <li>바닐라 익스트랙을 넣고 섞는다. </li>
-    </ol>
-  </div>
-  <div class="nav-buttons">
-    <button onclick="backToThumbnails('winter')">목록으로</button>
-    <a href="choco.png" download>PNG 저장</a>
-  </div>
-</div>
-
-<div id="gingerbreadCookies" class="recipe-detail card">
-  <img src="winter2.png" alt="오트밀 초코칩 쿠키" style="width:100%; border-radius:1.5rem;" />
-  <h2>오트밀 초코칩 쿠키 </h2>
-  <div class="detail-box ingredients-box">
-    <strong>재료</strong>
-    <ul>
-      <li>오트밀 1컵 </li>
-      <li>통밀가루 ½컵 </li>
-      <li>베이킹소다 ½작은술 </li>
-      <li>코코넛 오일 1½컵 </li>
-      <li>메이플 시럽 ⅓컵 </li>
-      <li>비건 초코칩 1½컵 </li>
-      <li>바닐라 익스트랙 약간 </li>
-    </ul>
-    <strong>대체 재료</strong>
-    <ul>
-      <li>초코칩 → 건포도, 견과류 </li>
-      <li>코코넛 오일 → 아보카도 오일 </li>
-    </ul>
-    <strong>영양 정보(1잔)</strong>
-    <ul>
-      <li>약 130kcal, 섬유질 풍부, 당류 8g </li>
-    </ul>
-  </div>
-  <div class="detail-box instructions-box">
-    <strong>만드는 법</strong>
-    <ol>
-      <li>오븐 180도 예열한다. </li>
-      <li>재료를 섞고 반죽을 동그랗게 빚는다. </li>
-      <li>초코칩을 올린다. </li>
-      <li>180도 오븐에 12분 굽는다. </li>
-    </ol>
-  </div>
-  <div class="nav-buttons">
-    <button onclick="backToThumbnails('winter')">목록으로</button>
-    <a href="cookie.png" download>PNG 저장</a>
-  </div>
-</div>
-
-<section class="comment-section">
   <h3>발자국을 남겨주세요!</h3>
-  <div class="leaf-icons">🍃 🍃 🍃</div>
   <form id="commentForm" onsubmit="addComment(event)">
-    <div class="rating">
-      <input type="radio" id="star5" name="rating" value="5" /><label for="star5">★</label>
-      <input type="radio" id="star4" name="rating" value="4" /><label for="star4">★</label>
-      <input type="radio" id="star3" name="rating" value="3" /><label for="star3">★</label>
-      <input type="radio" id="star2" name="rating" value="2" /><label for="star2">★</label>
-      <input type="radio" id="star1" name="rating" value="1" /><label for="star1">★</label>
-    </div>
-    <textarea id="commentInput" placeholder="내용 작성" required></textarea>
+    <label><input type="radio" name="rating" value="1">★</label>
+    <label><input type="radio" name="rating" value="2">★★</label>
+    <label><input type="radio" name="rating" value="3">★★★</label>
+    <label><input type="radio" name="rating" value="4">★★★★</label>
+    <label><input type="radio" name="rating" value="5">★★★★★</label><br>
+    <textarea id="commentInput" placeholder="내용 작성"></textarea><br>
     <button type="submit">전송</button>
   </form>
-  <div class="comments-list" id="commentsList"></div>
-</section>
+  <div id="commentsList"></div>
 
-<script>
-  let currentSeason = '';
-  let currentRecipe = '';
+  <script>
+    const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzBEFXoCmwB-TqUpZQ0Ar1Ezj8AsKgeClKKGVByhXcvbeQX1D2YFJbzJzFqGl5TTCWZKA/exec';
 
-  function showSeason(season) {
-    currentSeason = season;
-    currentRecipe = '';
-
-    document.querySelectorAll('.season-button').forEach(btn => {
-      const buttonSeasonText = btn.textContent.trim();
-      let buttonSeason = '';
-      if (buttonSeasonText === '봄') buttonSeason = 'spring';
-      else if (buttonSeasonText === '여름') buttonSeason = 'summer';
-      else if (buttonSeasonText === '가을') buttonSeason = 'autumn';
-      else if (buttonSeasonText === '겨울') buttonSeason = 'winter';
-      btn.classList.toggle('active', buttonSeason === season);
-    });
-
-    document.querySelectorAll('.recipe-thumbnails, .recipe-detail').forEach(el => {
-      el.style.display = 'none';
-    });
-
-    const seasonThumbnails = document.getElementById(season);
-    if (seasonThumbnails) {
-      seasonThumbnails.style.display = 'flex';
-    }
-  }
-
-  function showRecipe(id) {
-    currentRecipe = id;
-
-    if (currentSeason) {
-      document.getElementById(currentSeason).style.display = 'none';
+    function sendDataToSheet(eventData) {
+      fetch(APPS_SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(eventData)
+      })
+      .then(() => console.log('Data sent successfully'))
+      .catch(err => console.error('Error sending data:', err));
     }
 
-    document.querySelectorAll('.recipe-detail').forEach(el => {
-      el.style.display = 'none';
-    });
+    let currentSeason = '';
+    let currentRecipe = '';
 
-    const recipe = document.getElementById(id);
-    if (recipe) {
-      recipe.style.display = 'flex';
+    function showSeason(season) {
+      currentSeason = season;
+      currentRecipe = '';
+
+      document.querySelectorAll('.season-button').forEach(btn => {
+        btn.classList.toggle('active', btn.textContent.trim() === season);
+      });
+
+      document.querySelectorAll('.recipe-thumbnails, .recipe-detail').forEach(el => {
+        el.style.display = 'none';
+      });
+
+      const seasonThumbs = document.getElementById(season);
+      if (seasonThumbs) seasonThumbs.style.display = 'block';
     }
-  }
 
-  function backToThumbnails(season) {
-    currentRecipe = '';
-    if (season) {
+    function showRecipe(id) {
+      currentRecipe = id;
+      if (currentSeason) {
+        const thumbs = document.getElementById(currentSeason);
+        if (thumbs) thumbs.style.display = 'none';
+      }
+
+      document.querySelectorAll('.recipe-detail').forEach(el => el.style.display = 'none');
+      const recipe = document.getElementById(id);
+      if (recipe) {
+        recipe.style.display = 'block';
+        sendDataToSheet({ type: 'recipe_click', detail: id });
+      }
+    }
+
+    function backToThumbnails(season) {
+      currentRecipe = '';
+      document.querySelectorAll('.recipe-detail').forEach(el => el.style.display = 'none');
+      const thumbs = document.getElementById(season);
+      if (thumbs) thumbs.style.display = 'block';
       showSeason(season);
     }
-  }
 
-  // --- 별점 & 댓글 기능 Script 시작 ---
-
-  function loadComments() {
-    // 저장된 댓글을 객체 배열 형태로 불러옴
-    const comments = JSON.parse(localStorage.getItem('comments') || '[]');
-    const commentsList = document.getElementById('commentsList');
-    commentsList.innerHTML = ''; // 목록 초기화
-
-    comments.forEach(c => {
-      const item = document.createElement('div');
-      item.className = 'comment-item';
-
-      const ratingSpan = document.createElement('span');
-      ratingSpan.className = 'comment-rating';
-      ratingSpan.textContent = '★'.repeat(c.rating) + '☆'.repeat(5 - c.rating);
-
-      const textSpan = document.createElement('span');
-      textSpan.className = 'comment-text';
-      textSpan.textContent = c.text;
-
-      item.appendChild(ratingSpan);
-      item.appendChild(textSpan);
-      commentsList.appendChild(item);
-    });
-  }
-
-  function addComment(event) {
-    event.preventDefault(); // form의 기본 제출 동작 방지
-
-    const form = document.getElementById('commentForm');
-    const ratingInput = form.querySelector('input[name="rating"]:checked');
-    const commentInput = document.getElementById('commentInput');
-    
-    const rating = ratingInput ? ratingInput.value : null;
-    const commentText = commentInput.value.trim();
-
-    if (!rating) {
-      alert('별점을 선택해주세요.');
-      return;
-    }
-    if (!commentText) {
-      alert('댓글 내용을 입력해주세요.');
-      return;
+    function loadComments() {
+      const comments = JSON.parse(localStorage.getItem('comments') || '[]');
+      const commentsList = document.getElementById('commentsList');
+      commentsList.innerHTML = '';
+      comments.forEach(c => {
+        const item = document.createElement('div');
+        item.className = 'comment-item';
+        item.innerHTML = `<span class="comment-rating">${'★'.repeat(c.rating)}${'☆'.repeat(5 - c.rating)}</span><span class="comment-text">${c.text}</span>`;
+        commentsList.appendChild(item);
+      });
     }
 
-    // 댓글을 { rating, text } 객체 형태로 저장
-    const comments = JSON.parse(localStorage.getItem('comments') || '[]');
-    comments.push({ rating: parseInt(rating), text: commentText });
-    localStorage.setItem('comments', JSON.stringify(comments));
+    function addComment(event) {
+      event.preventDefault();
+      const ratingInput = document.querySelector('input[name="rating"]:checked');
+      const commentInput = document.getElementById('commentInput');
+      const rating = ratingInput ? ratingInput.value : null;
+      const commentText = commentInput.value.trim();
 
-    // 폼 초기화
-    form.reset();
-    commentInput.value = '';
+      if (!rating || !commentText) {
+        alert('별점과 내용을 모두 입력해주세요.');
+        return;
+      }
 
-    // 댓글 목록 다시 불러오기
-    loadComments();
-  }
+      const comments = JSON.parse(localStorage.getItem('comments') || '[]');
+      comments.push({ rating: parseInt(rating), text: commentText });
+      localStorage.setItem('comments', JSON.stringify(comments));
 
-  // — 별점 & 댓글 기능 Script 끝 —
+      sendDataToSheet({ type: 'comment', detail: `rating: ${rating}, comment: ${commentText}` });
 
-  window.onload = () => {
-    loadComments();
-    showSeason('spring');
-  };
+      document.getElementById('commentForm').reset();
+      loadComments();
+    }
+
+    window.onload = () => {
+  loadComments();
+  showSeason('spring');
+};
 </script>
+  </script>
 </body>
 </html>
