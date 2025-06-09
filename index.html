@@ -10,54 +10,82 @@
     body {
       font-family: 'Noto Sans KR', sans-serif;
       margin: 2rem;
-      background-color: #f9f9f9;
+      background-color: #f8f6f4;
       color: #333;
     }
     h1 {
       font-size: 1.8rem;
-      margin-bottom: 1rem;
+      margin-bottom: 0.8rem;
+      text-align: center;
+      background-color: #d6bfa7;
+      color: white;
+      padding: 1rem;
+      border-radius: 1rem;
+    }
+    p {
+      max-width: 600px;
+      margin: 0 auto 2rem;
+      background-color: #e9f2e3;
+      padding: 1rem;
+      border-radius: 1rem;
     }
     .season-buttons {
-      margin-bottom: 1rem;
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
     }
     .season-button {
-      margin-right: 0.5rem;
-      padding: 0.3rem 0.8rem;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      background-color: #fff;
+      padding: 0.4rem 1rem;
+      border: none;
+      border-radius: 1rem;
+      background: #eee;
       cursor: pointer;
+      transition: 0.2s;
     }
     .season-button.active {
-      background-color: #dff5e1;
-      color: #2c7a3f;
+      background-color: #84d4b8;
       font-weight: bold;
+      color: white;
     }
     .thumbnail {
-      margin-top: 1rem;
       cursor: pointer;
       font-weight: bold;
       border: 1px solid #ccc;
       padding: 0.5rem;
       background-color: #fff;
       width: fit-content;
+      margin: 0 auto;
     }
     .recipe-detail {
       margin-top: 1rem;
       padding: 1rem;
       border: 1px solid #ccc;
       background-color: #fff;
+      border-radius: 1rem;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    h3 {
+      text-align: center;
+      margin-top: 3rem;
     }
     form {
-      margin-top: 2rem;
+      margin-top: 1rem;
       padding: 1rem;
       border: 1px solid #ccc;
       background-color: #fff;
+      max-width: 600px;
+      margin: 1rem auto;
+      border-radius: 1rem;
     }
     textarea {
       width: 100%;
       height: 4rem;
       margin-top: 0.5rem;
+      padding: 0.5rem;
+      border-radius: 0.5rem;
+      border: 1px solid #ccc;
     }
     .comment-rating {
       color: #f5b301;
@@ -70,12 +98,29 @@
     }
     #commentsList {
       margin-top: 1rem;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    button[type="submit"] {
+      margin-top: 0.5rem;
+      background-color: #d6bfa7;
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 1rem;
+      cursor: pointer;
     }
   </style>
 </head>
 <body>
   <h1>초간단 비건 디저트 가이드</h1>
-  <p>비건 디저트는 유제품과 달걀 없이도 가볍고 소화가 잘 되며, 알레르기나 식이 제한이 있는 사람들도 안심하고 즐길 수 있습니다...</p>
+  <p>
+    비건 디저트는 유제품과 달걀 없이도 가볍고 소화가 잘 되며, 알레르기나 식이 제한이 있는 사람들도 안심하고 즐길 수 있습니다. 
+    또한 동물성 재료를 쓰지 않아 환경 부담을 줄이고, 지속가능한 식습관으로 이어집니다. 
+    식물성 재료 중심이라 식이섬유와 영양이 풍부해 건강한 간식으로도 좋아요. 
+    간단한 비건 베이킹으로 건강한 취미를 즐겨보세요!
+  </p>
 
   <div class="season-buttons">
     <button class="season-button" onclick="showSeason('spring')">봄</button>
@@ -85,7 +130,9 @@
   </div>
 
   <div id="spring" class="recipe-thumbnails">
-    <div class="thumbnail" onclick="showRecipe('matcha')">말차 라떼</div>
+    <div class="thumbnail" onclick="showRecipe('matcha')">
+      <img src="https://source.unsplash.com/featured/?matcha,latte" alt="말차 라떼" width="200">
+    </div>
   </div>
 
   <div id="matcha" class="recipe-detail">
@@ -94,7 +141,7 @@
     <button onclick="backToThumbnails('spring')">목록으로</button>
   </div>
 
-  <h3>발자국을 남겨주세요!</h3>
+  <h3>발자국을 남겨주세요! 🍃🍃🍃</h3>
   <form id="commentForm" onsubmit="addComment(event)">
     <label><input type="radio" name="rating" value="1">★</label>
     <label><input type="radio" name="rating" value="2">★★</label>
