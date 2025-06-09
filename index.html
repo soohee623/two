@@ -798,12 +798,6 @@ function backToThumbnails(season) {
     // 기존 코드
    localStorage.setItem('comments', JSON.stringify(comments));
 
-// 🔽 여기에 추가
-  sendDataToSheet({
-  type: 'comment',
-  detail: `rating: ${rating}, comment: ${commentText}`
-});
-
     sendDataToSheet({
   type: 'comment',
   detail: `rating: ${rating}, comment: ${commentText}`
